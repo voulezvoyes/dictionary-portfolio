@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jaesung Kim</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" rel="stylesheet">
+<style>
+  :root {
+    --bg:#F2EDE4;
+    --bg-inset:#EAE4D9;
+    --bg-exp:#E4DDD2;
+    --ink:#1A1A1A;
+    --mid:#3A3A3A;
+    --muted:#7A7060;
+    --rule:#C8C0B0;
+    --red:#9B2335;
+    --red-bg:rgba(155,35,53,0.07);
+    --f:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--f);min-height:100vh;-webkit-font-smoothing:antialiased}
+  hr{border:none;border-top:1px solid var(--rule)}
+
+  /* HEADER */
+  header{padding:2rem 3rem 0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:1rem}
+  .eyebrow{font-size:.68rem;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+  .name-row{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+  h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+  .phonetic{font-size:.68rem;color:var(--muted);letter-spacing:.04em}
+  .name-kr{font-size:.8rem;font-weight:400;color:var(--muted)}
+  .header-right{display:flex;align-items:center;gap:1rem}
+  .header-meta{font-size:.6rem;color:var(--muted);letter-spacing:.08em;line-height:1.8;text-transform:uppercase;text-align:right}
+  .lang-toggle{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;font-size:.62rem;font-weight:500;letter-spacing:.12em;color:var(--muted);border:1px solid var(--rule);padding:.24rem .65rem;background:transparent;transition:all .18s;text-transform:uppercase;font-family:var(--f);white-space:nowrap}
+  .lang-toggle:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .lang-dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+
+  /* HOOK */
+  .hook{padding:1.4rem 3rem 1.6rem;display:grid;grid-template-columns:200px 1fr;gap:2.5rem;align-items:start}
+  .hook-left{display:flex;flex-direction:column;gap:.5rem}
+  .hook-pos{font-size:.7rem;color:var(--muted);letter-spacing:.03em;line-height:1.9}
+  .hook-contact{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.2rem}
+  .contact-link{font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color .14s;border-bottom:1px solid transparent}
+  .contact-link:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .hook-def{font-size:.95rem;font-weight:300;line-height:1.7;color:var(--mid);max-width:560px;margin-bottom:1rem}
+  .hook-def strong{font-weight:600;color:var(--ink)}
+  .hook-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+
+  /* SEARCH */
+  .search-section{padding:1.4rem 3rem;background:var(--bg-inset)}
+  .search-eyebrow{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem;display:block}
+  .search-row{display:flex;align-items:center;border-bottom:1.5px solid var(--ink);padding-bottom:.35rem;gap:.7rem;max-width:620px}
+  .search-glyph{font-size:.75rem;color:var(--muted);user-select:none;flex-shrink:0}
+  #search-input{flex:1;background:transparent;border:none;outline:none;font-family:var(--f);font-size:clamp(1.1rem,2.4vw,1.5rem);font-weight:300;color:var(--ink);letter-spacing:-.02em;caret-color:var(--red)}
+  #search-input::placeholder{color:var(--rule)}
+  #clear-btn{background:none;border:none;cursor:pointer;font-size:.65rem;color:var(--muted);display:none;padding:.2rem;font-family:var(--f)}
+  #clear-btn:hover{color:var(--ink)}
+  .tags-row{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem;margin-top:.8rem;max-width:620px}
+  .tags-label{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-right:.2rem}
+
+  /* PILLS */
+  .tag,.hook-tag,.skill-pill,.see-also-link{
+    font-size:.65rem;font-weight:500;letter-spacing:.07em;
+    border:1px solid var(--rule);padding:.2rem .55rem;
+    cursor:pointer;transition:all .12s;color:var(--mid);
+    background:transparent;font-family:var(--f);text-transform:uppercase
+  }
+  .tag{text-transform:lowercase;font-weight:400}
+  .tag:hover,.hook-tag:hover,.skill-pill:hover,.see-also-link:hover{border-color:var(--ink);color:var(--ink);background:rgba(26,26,26,0.05)}
+
+  /* RESULTS */
+  #results{padding:0 3rem 5rem}
+  .results-count{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:1rem 0 .2rem}
+
+  /* SECTION */
+  .section-block{margin-top:.2rem}
+  .section-toggle{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 0 1rem;cursor:pointer;background:none;border:none;font-family:var(--f);width:100%;border-top:2px solid var(--ink)}
+  .section-toggle:hover .section-title{color:var(--red)}
+  .section-title{font-size:1.1rem;font-weight:600;letter-spacing:-.02em;color:var(--ink);transition:color .14s}
+  .section-arrow{font-size:.75rem;color:var(--muted);transition:transform .22s ease;display:inline-block;margin-right:.2rem}
+  .section-block.is-closed .section-arrow{transform:rotate(-180deg)}
+  .section-count{font-size:.75rem;font-weight:400;color:var(--muted);letter-spacing:0}
+  .section-arrow-icon{font-size:1rem;color:var(--muted);transition:transform .22s ease;display:inline-block}
+  .section-block.is-closed .section-arrow-icon{transform:rotate(180deg)}
+  .section-entries{overflow:hidden;transition:max-height .35s ease}
+  .section-block.is-closed .section-entries{max-height:0!important}
+
+  /* ENTRY */
+  .entry{border-top:1px solid var(--rule);animation:fadeIn .22s ease both}
+  .entry:last-child{border-bottom:1px solid var(--rule)}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+  .entry-main{padding:1.4rem 0;display:grid;grid-template-columns:200px 1fr;gap:2.5rem;cursor:pointer;transition:background .15s}
+  .entry-main:hover{background:var(--bg-inset);margin:0 -3rem;padding-left:3rem;padding-right:3rem}
+
+  .entry-left{display:flex;flex-direction:column;gap:.4rem;padding-top:.1rem}
+  .entry-skills{display:flex;flex-direction:column;gap:.25rem}
+  .skill-pill{display:inline-block;width:fit-content}
+  .entry-pos{font-size:.62rem;color:var(--muted);letter-spacing:.05em;margin-top:.1rem;line-height:1.6}
+  .entry-num{font-size:.6rem;color:var(--red);letter-spacing:.1em;background:var(--red-bg);padding:.16rem .4rem;width:fit-content;margin-top:auto}
+
+  .entry-title{font-size:clamp(1.1rem,1.8vw,1.35rem);font-weight:600;letter-spacing:-.025em;line-height:1.15;color:var(--ink);margin-bottom:.15rem}
+  .entry-org{font-size:.68rem;color:var(--muted);letter-spacing:.03em;margin-bottom:.65rem}
+  .entry-def{font-size:.88rem;font-weight:300;line-height:1.72;color:var(--mid);max-width:540px;margin-bottom:.7rem}
+
+  .situation-preview{font-size:.82rem;font-weight:300;line-height:1.65;color:var(--muted);max-width:540px;margin-bottom:.8rem;font-style:italic;border-left:2px solid var(--rule);padding-left:.8rem}
+
+  .entry-metrics{display:flex;flex-wrap:wrap;gap:1.4rem;padding-top:.5rem;border-top:1px solid var(--rule);margin-bottom:.7rem}
+  .metric-val{display:block;font-size:.9rem;font-weight:600;letter-spacing:-.02em;color:var(--ink);line-height:1.1;background:var(--red-bg);padding:.08rem .35rem;width:fit-content}
+  .metric-label{display:block;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.2rem}
+
+  .entry-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  .entry-link{font-size:.63rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;transition:all .14s}
+  .entry-link:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .expand-toggle{display:inline-flex;align-items:center;gap:.35rem;font-size:.63rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:color .14s;background:none;border:none;font-family:var(--f);padding:0}
+  .expand-toggle:hover{color:var(--ink)}
+  .expand-arrow{display:inline-block;transition:transform .22s ease;font-size:.65rem}
+  .entry.is-open .expand-arrow{transform:rotate(90deg)}
+
+  /* CASE STUDY */
+  .case-study{max-height:0;overflow:hidden;transition:max-height .4s ease;background:var(--bg-exp);margin:0 -3rem}
+  .entry.is-open .case-study{max-height:99999px}
+  .case-study-inner{padding:1.8rem 3rem 2rem;display:grid;grid-template-columns:200px 1fr;gap:2.5rem;border-top:1px solid var(--rule)}
+  .case-label{font-size:.62rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:.15rem}
+  .case-section{margin-bottom:1.2rem}
+  .case-section:last-child{margin-bottom:0}
+  .case-section-label{font-size:.6rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+  .case-section-body{font-size:.86rem;font-weight:300;line-height:1.72;color:var(--mid);max-width:520px}
+  .see-also{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.4rem}
+
+  mark{background:var(--red-bg);color:var(--red);padding:0 .1em}
+
+  .empty-state{padding:2.5rem 0;border-top:1px solid var(--rule)}
+  .empty-word{font-size:1.6rem;font-weight:200;color:var(--rule);margin-bottom:.4rem;letter-spacing:-.02em}
+  .empty-note{font-size:.62rem;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+
+  footer{border-top:1px solid var(--rule);padding:1.2rem 3rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem}
+  .footer-note{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .footer-edition{font-size:.65rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
+
+  @media(max-width:640px){
+    header,.hook,.search-section,#results,footer{padding-left:1.4rem;padding-right:1.4rem}
+    .hook,.entry-main,.case-study-inner{grid-template-columns:1fr;gap:.7rem}
+    .entry-main:hover{margin:0 -1.4rem;padding-left:1.4rem;padding-right:1.4rem}
+    .case-study{margin:0 -1.4rem}
+    .case-study-inner{padding-left:1.4rem;padding-right:1.4rem}
+    h1{font-size:1.8rem}
+  }
+  body.lang-kr .en-only{display:none!important}
+  body.lang-kr .kr-only{display:block!important}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <p class="eyebrow">Portfolio — 2026</p>
+    <div class="name-row">
+      <h1>Jaesung Kim</h1>
+      <span class="phonetic">/ dʒeɪ.sʌŋ kɪm /</span>
+      <span class="name-kr">김재성</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="header-meta">Los Angeles, CA<br>2026 Ed.</div>
+    <button class="lang-toggle" id="lang-btn">
+      <span class="lang-dot"></span>
+      <span id="lang-label">한국어</span>
+    </button>
+  </div>
+</header>
+
+<hr style="margin-top:1.6rem">
+
+<div class="hook">
+  <div class="hook-left">
+    <div class="hook-pos en-only">n. systems thinker.<br>builder. writer.</div>
+    <div class="hook-pos kr-only" style="display:none">n. 시스템 사고자.<br>빌더. 작가.</div>
+    <div class="hook-contact">
+      <a class="contact-link" href="mailto:voulezvoyes@gmail.com">→ Email</a>
+      <a class="contact-link" href="https://linkedin.com/in/voulezvoyes" target="_blank" rel="noopener">→ LinkedIn</a>
+    </div>
+  </div>
+  <div class="hook-right">
+    <p class="hook-def en-only">Works at the intersection of <strong>organizational design</strong>, <strong>human-AI interaction</strong>, and <strong>creative technology</strong>. Builds things that make complex systems legible.</p>
+    <p class="hook-def kr-only" style="display:none"><strong>조직 설계</strong>, <strong>인간-AI 상호작용</strong>, <strong>크리에이티브 테크놀로지</strong>의 교차점. 복잡한 시스템을 읽기 가능하게 만드는 것들을 만든다.</p>
+    <div class="hook-tags">
+      <button class="hook-tag" data-search="systems">Systems</button>
+      <button class="hook-tag" data-search="AI">AI</button>
+      <button class="hook-tag" data-search="community">Community</button>
+      <button class="hook-tag" data-search="writing">Writing</button>
+      <button class="hook-tag" data-search="vibe coding">Vibe Coding</button>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<section class="search-section">
+  <span class="search-eyebrow en-only">Search by keyword or skill</span>
+  <span class="search-eyebrow kr-only" style="display:none">키워드 또는 스킬로 검색</span>
+  <div class="search-row">
+    <span class="search-glyph">↳</span>
+    <input type="text" id="search-input" placeholder="AI, community, writing…" autocomplete="off" spellcheck="false">
+    <button id="clear-btn">✕</button>
+  </div>
+  <div class="tags-row">
+    <span class="tags-label en-only">try →</span>
+    <span class="tags-label kr-only" style="display:none">예시 →</span>
+    <button class="tag" data-search="systems">systems</button>
+    <button class="tag" data-search="AI">AI</button>
+    <button class="tag" data-search="vibe coding">vibe coding</button>
+    <button class="tag" data-search="writing">writing</button>
+    <button class="tag" data-search="community">community</button>
+  </div>
+</section>
+
+<hr>
+<section id="results"></section>
+
+<footer>
+  <span class="footer-note en-only">Jaesung Kim — All entries reflect direct contribution.</span>
+  <span class="footer-note kr-only" style="display:none">김재성 — 모든 항목은 직접 기여한 작업입니다.</span>
+  <span class="footer-edition">jaesungkim.is</span>
+</footer>
+
+<script>
+var ENTRIES = [
+  { id:'ko-sca-brand', type:'experience', num:'01',
+    title:'Ko.SCA — Brand & Strategy', title_kr:'Ko.SCA — 브랜드 & 전략',
+    org:'Korean Student Cultural Association, UC San Diego', org_kr:'한인 학생 문화 협회, UC San Diego',
+    pos:'n. — brand strategy · org design', skills:['Brand Strategy','Org Design','Leadership'],
+    def:'Repositioned a student org\'s identity and rebuilt its operational infrastructure from scratch.',
+    def_kr:'학생 조직의 정체성을 재포지셔닝하고 운영 인프라를 처음부터 재구축.',
+    metrics:[{val:'83%',label:'Budget increase'},{val:'2 wks',label:'Onboarding (was 2 mo)'}],
+    situation:"Ko.SCA ran on informal handoffs and institutional memory that lived in people's heads — every leadership transition meant starting over.",
+    situation_kr:'Ko.SCA는 비공식적인 인수인계와 구성원의 머릿속에만 존재하는 조직 기억으로 운영됐다.',
+    case:{ action:"Rebuilt the org from inside: documented every role, created event runbooks, standardized inter-team communication, tied budget proposals to measurable outcomes.", result:"Onboarding dropped from two months to two weeks. Budget grew 83%. The org became something that could outlast any one person.", seeAlso:['community','systems'] },
+    case_kr:{ action:'모든 역할 문서화, 행사 런북 제작, 팀간 커뮤니케이션 표준화, 예산을 성과와 연결해 83% 증액 승인.', result:'온보딩이 2개월에서 2주로. 예산 83% 성장. 조직이 특정 개인에 의존하지 않아도 되는 구조가 됐다.', seeAlso:['커뮤니티','시스템'] },
+    keywords:['brand','strategy','ko.sca','organizational','leadership','design','community','systems','onboarding','budget'] },
+
+  { id:'erin-oh', type:'experience', num:'02',
+    title:'Erin Oh Studio', title_kr:'Erin Oh Studio',
+    org:'Erin Oh Studio, Los Angeles', org_kr:'Erin Oh Studio, 로스앤젤레스',
+    pos:'n. — brand systems · growth', skills:['Brand Systems','Audience Growth','Editorial'],
+    def:'Built the editorial system and brand voice for a Korean-American lifestyle brand over two years.',
+    def_kr:'2년간 한국계 미국인 라이프스타일 브랜드의 에디토리얼 시스템과 브랜드 보이스 구축.',
+    metrics:[{val:'19K → 28K',label:'Followers'},{val:'2023 – 2025',label:'Duration'}],
+    situation:'Strong visual identity, inconsistent output, no editorial framework. Growth had plateaued.',
+    situation_kr:'강한 비주얼 아이덴티티, 불규칙한 콘텐츠 출력, 에디토리얼 프레임워크 없음. 성장 정체.',
+    case:{ action:'Audited content, mapped audience behavior, built recurring series formats, platform-specific tone guides, and a sustainable content calendar.', result:'Followers grew from ~19K to 28K. The brand developed a consistent voice across all formats.', seeAlso:['brand strategy','systems'] },
+    case_kr:{ action:'기존 콘텐츠 감사, 오디언스 행동 분석, 반복 가능한 시리즈 포맷, 플랫폼별 톤 가이드, 콘텐츠 캘린더 구축.', result:'팔로워가 약 19K에서 28K로. 브랜드가 일관된 목소리를 갖게 됐다.', seeAlso:['브랜드 전략','시스템'] },
+    keywords:['content','strategy','erin','oh','studio','social','media','growth','brand','editorial','instagram'] },
+
+  { id:'memoir', type:'experience', num:'03',
+    title:'altogether alone', title_kr:'온전히 혼자',
+    org:'Bilingual Memoir — Self-published 2025', org_kr:'이중 언어 memoir — 2025년 독립출판',
+    pos:'n. — writing · publishing', skills:['Long-form Writing','Publishing'],
+    def:'A memoir written simultaneously in English and Korean — not translated, but built in parallel.',
+    def_kr:'영어와 한국어로 동시에 구상된 memoir — 번역이 아닌 병행 구조.',
+    metrics:[{val:'EN / KR',label:'Languages'},{val:'2025',label:'Self-published'}],
+    situation:'The gap between the two versions of yourself — Korean-at-home, English-everywhere-else — is rarely written about from inside.',
+    situation_kr:'집에서는 한국어, 나머지는 영어인 두 자아 사이의 간극은 그 안에서 쓰이는 경우가 드물다.',
+    case:{ action:'Wrote both versions simultaneously, treating neither as primary. Each language surfaces different things.', result:'Self-published 2025. The process argued that the space between languages is not emptiness but its own clarity.', seeAlso:['writing','systems'] },
+    case_kr:{ action:'어느 쪽도 원본으로 두지 않고 두 버전을 동시에 작성했다. 각 언어는 서로 다른 것을 드러낸다.', result:'2025년 독립출판. 언어 사이의 공간은 공백이 아니라 그 자체로 일종의 명확함.', seeAlso:['글쓰기','시스템'] },
+    keywords:['bilingual','writing','memoir','book','publishing','korean','english','identity','altogether','alone','creative'] },
+
+  { id:'ko-sca-ops', type:'experience', num:'04',
+    title:'Ko.SCA — Community Design', title_kr:'Ko.SCA — 커뮤니티 설계',
+    org:'Korean Student Cultural Association, UC San Diego', org_kr:'한인 학생 문화 협회, UC San Diego',
+    pos:'n. — community design · operations', skills:['Community Design','Operations','Org Design'],
+    def:'Redesigned how members join, contribute, and stay — turning an org that ran on people into one that ran on systems.',
+    def_kr:'구성원이 합류하고 기여하고 잔류하는 방식을 재설계 — 사람에 의존하던 조직을 시스템으로.',
+    metrics:[{val:'4×',label:'Faster onboarding'}],
+    situation:'Knowledge lived in people, not systems. When key members left, the org had to start from scratch.',
+    situation_kr:'지식이 시스템이 아닌 사람에게 있었다. 핵심 구성원이 떠날 때마다 처음부터 시작해야 했다.',
+    case:{ action:'Mapped every informal process, turned them into written systems — role docs, event checklists, transition protocols.', result:'Onboarding dropped from two months to two weeks. The org became resilient enough to absorb turnover without losing continuity.', seeAlso:['brand strategy','systems'] },
+    case_kr:{ action:'비공식적으로 존재하던 모든 프로세스를 파악하고 문서 시스템으로 전환 — 역할 문서, 행사 체크리스트, 인수인계 프로토콜.', result:'온보딩이 2개월에서 2주로. 조직이 인원 교체를 흡수하면서도 연속성을 유지하게 됐다.', seeAlso:['브랜드 전략','시스템'] },
+    keywords:['community','design','operations','onboarding','systems','leadership','organization','ko.sca','structure'] },
+
+  { id:'cosmos', type:'project', num:'05',
+    title:'cosmos', title_kr:'cosmos',
+    org:'Personal — AI Tool Design', org_kr:'개인 프로젝트 — AI 도구 설계',
+    pos:'n. — AI · product design', skills:['Vibe Coding','AI / LLM','Product Design'],
+    def:'Knowledge management prototype that visualizes information as a live node graph — surfaces hidden connections across notes and research.',
+    def_kr:'정보를 실시간 노드 그래프로 시각화하는 지식 관리 프로토타입 — 숨겨진 연결을 탐색.',
+    metrics:[{val:'Gemini',label:'API'},{val:'Deployed',label:'Status'}],
+    situation:"Standard PKM tools felt like filing cabinets. The problem wasn't storage — information existed but couldn't be connected.",
+    situation_kr:"기존 PKM 툴은 서류 캐비닛 같았다. 문제는 저장이 아니라 연결이었다.",
+    case:{ action:'Built using Google AI Studio and Gemini API: input any text, the model extracts concepts, nodes form, edges appear where connections exist.', result:'Working prototype deployed. LLMs as connective tissue between ideas — not just search, but structure.', seeAlso:['AI','systems'] },
+    case_kr:{ action:'Google AI Studio와 Gemini API로 제작: 텍스트를 입력하면 모델이 개념을 추출하고, 노드가 형성되며, 연결이 존재하는 곳에 엣지가 나타난다.', result:'프로토타입 배포 완료. 검색이 아닌 구조를 만드는 도구로서의 LLM.', seeAlso:['AI','시스템'] },
+    keywords:['AI','cosmos','knowledge','tool','design','gemini','prototype','systems','product','vibe coding'] },
+
+  { id:'luna-reads', type:'project', num:'06',
+    title:'luna reads', title_kr:'luna reads',
+    org:'Personal — AI · Astrology · Saju', org_kr:'개인 프로젝트 — AI · 점성학 · 사주',
+    pos:'n. — AI · vibe coding', skills:['Vibe Coding','AI / LLM','Product Design'],
+    url:'https://luna-reads.vercel.app',
+    def:'Deployed app that merges saju and Western astrology into one AI reading. Two ancient systems, one interface.',
+    def_kr:'사주와 서양 점성학을 하나의 AI 리딩으로 합친 배포된 앱. 두 개의 고대 시스템, 하나의 인터페이스.',
+    metrics:[{val:'Live',label:'Status'},{val:'Vercel',label:'Platform'}],
+    situation:'Saju and Western astrology answer the same questions but have always existed separately. No one had merged the two.',
+    situation_kr:'사주와 서양 점성학은 같은 질문을 묻지만 항상 분리돼 있었다. 둘을 합친 곳이 없었다.',
+    case:{ action:'Vibe-coded the full product solo: birth data input, synthesized AI reading across both systems, clean output UI. Shipped to Vercel.', result:'Live at luna-reads.vercel.app. First project built and deployed entirely solo.', seeAlso:['AI','vibe coding'] },
+    case_kr:{ action:'전체 제품을 바이브 코딩으로 단독 제작: 생년월일 입력, 두 시스템 통합 리딩 생성, Vercel 배포.', result:'luna-reads.vercel.app 라이브. 처음으로 아이디어에서 배포까지 단독으로 완성.', seeAlso:['AI','바이브 코딩'] },
+    keywords:['AI','luna','reads','astrology','saju','vibe coding','product','deployed','vercel'] },
+
+  { id:'spork', type:'project', num:'07',
+    title:'spork', title_kr:'spork',
+    org:'Personal — In Progress', org_kr:'개인 프로젝트 — 진행 중',
+    pos:'n. — AI · HCI · vibe coding', skills:['Vibe Coding','HCI','AI / LLM'],
+    def:'AI chat tool that lets you branch conversations like Git — fork any message into a new thread without losing context.',
+    def_kr:'AI 대화를 Git처럼 분기할 수 있는 도구 — 어느 메시지에서든 원본을 유지하면서 새 스레드로 포크.',
+    metrics:[{val:'In progress',label:'Status'},{val:'Next.js',label:'Stack'}],
+    situation:"Every AI chat interface is linear. But thinking isn't — good ideas surface mid-conversation and get buried.",
+    situation_kr:'모든 AI 채팅 인터페이스는 선형이다. 하지만 사고는 그렇지 않다. 좋은 아이디어는 대화 중간에 나왔다가 묻힌다.',
+    case:{ action:'Building a branching chat interface on Next.js + Supabase + Anthropic API. Any message can be forked; branch tree visualized as a sidebar.', result:'In active development. Directly addresses a structural problem in human-AI interaction — natural HCDE case study.', seeAlso:['AI','systems'] },
+    case_kr:{ action:'Next.js + Supabase + Anthropic API 기반 분기 가능한 채팅 인터페이스 개발 중.', result:'활발히 개발 중. 인간-AI 상호작용의 구조적 문제를 직접 다룸 — HCDE 케이스 스터디.', seeAlso:['AI','시스템'] },
+    keywords:['AI','spork','chat','branching','HCI','vibe coding','next.js','supabase','anthropic','in progress','hcde'] }
+];
+
+var lang='en', query='', openEntries={}, closedSections={};
+
+function setSearch(term){
+  query=term;
+  document.getElementById('search-input').value=term;
+  document.getElementById('clear-btn').style.display=term?'inline':'none';
+  render();
+}
+function toggleLang(){
+  lang=lang==='en'?'kr':'en';
+  document.body.classList.toggle('lang-kr',lang==='kr');
+  document.getElementById('lang-label').textContent=lang==='en'?'한국어':'English';
+  render();
+}
+function toggleEntry(id){
+  openEntries[id]=!openEntries[id];
+  var el=document.querySelector('[data-entry-id="'+id+'"]');
+  if(!el)return;
+  el.classList.toggle('is-open',!!openEntries[id]);
+  var btn=el.querySelector('.expand-toggle');
+  if(btn){
+    var kr=lang==='kr';
+    btn.innerHTML='<span class="expand-arrow">›</span> '+(openEntries[id]?(kr?'접기':'Close'):(kr?'케이스 스터디':'Case study'));
+  }
+}
+function toggleSection(type){
+  closedSections[type]=!closedSections[type];
+  var block=document.querySelector('[data-section="'+type+'"]');
+  if(!block)return;
+  block.classList.toggle('is-closed',!!closedSections[type]);
+  var entries=block.querySelector('.section-entries');
+  if(entries)entries.style.maxHeight=closedSections[type]?'0':'99999px';
+}
+function hl(text,q){
+  if(!q)return text;
+  return text.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>');
+}
+function matchEntry(e,q){
+  if(!q)return true;
+  return [e.title,e.def,e.org,e.situation||''].concat(e.skills).concat(e.keywords).join(' ').toLowerCase().indexOf(q.toLowerCase().trim())!==-1;
+}
+function buildEntry(e,i){
+  var kr=lang==='kr';
+  var isOpen=!!openEntries[e.id];
+  var cd=kr?e.case_kr:e.case;
+  var sit=kr?(e.situation_kr||''):(e.situation||'');
+  var toggleLabel=isOpen?(kr?'접기':'Close'):(kr?'케이스 스터디':'Case study');
+  var urlBtn=e.url?'<a href="'+e.url+'" target="_blank" rel="noopener" class="entry-link">↗ '+(kr?'사이트 보기':'Visit site')+'</a>':'';
+  var skillsH=e.skills.map(function(s){return '<span class="skill-pill" data-search="'+s.toLowerCase()+'">'+s+'</span>';}).join('');
+  var metricsH=e.metrics.map(function(m){return '<div><span class="metric-val">'+m.val+'</span><span class="metric-label">'+m.label+'</span></div>';}).join('');
+  var seeAlsoH=cd.seeAlso.map(function(s){return '<button class="see-also-link" data-search="'+s+'">'+s+'</button>';}).join('');
+  var sitPreview='';
+  return '<div class="entry'+(isOpen?' is-open':'')+'" data-entry-id="'+e.id+'" style="animation-delay:'+(i*0.04)+'s">'
+    +'<div class="entry-main" data-toggle-entry="'+e.id+'">'
+    +'<div class="entry-left"><div class="entry-skills">'+skillsH+'</div><div class="entry-pos">'+e.pos+'</div><div class="entry-num">— '+e.num+'</div></div>'
+    +'<div class="entry-right">'
+    +'<div class="entry-title">'+hl(kr?e.title_kr:e.title,query)+'</div>'
+    +'<div class="entry-org">'+(kr?e.org_kr:e.org)+'</div>'
+    +'<div class="entry-def">'+hl(kr?e.def_kr:e.def,query)+'</div>'
+    +sitPreview
+    +'<div class="entry-metrics">'+metricsH+'</div>'
+    +'<div class="entry-actions">'+urlBtn
+    +'<button class="expand-toggle" data-toggle-entry="'+e.id+'"><span class="expand-arrow">›</span> '+toggleLabel+'</button>'
+    +'</div></div></div>'
+    +'<div class="case-study"><div class="case-study-inner">'
+    +'<div class="case-label">'+(kr?'케이스 스터디':'Case Study')+'</div>'
+    +'<div>'
+    +'<div class="case-section"><div class="case-section-label">'+(kr?'접근':'Approach')+'</div><div class="case-section-body">'+cd.action+'</div></div>'
+    +'<div class="case-section"><div class="case-section-label">'+(kr?'결과':'Result')+'</div><div class="case-section-body">'+cd.result+'</div></div>'
+    +'<div class="case-section"><div class="case-section-label">'+(kr?'관련 항목':'See also')+'</div><div class="see-also">'+seeAlsoH+'</div></div>'
+    +'</div></div></div>'
+    +'</div>';
+}
+function buildSection(type,label,entries){
+  var isClosed=!!closedSections[type];
+  var html=entries.map(function(e,i){return buildEntry(e,i);}).join('');
+  return '<div class="section-block'+(isClosed?' is-closed':'')+'" data-section="'+type+'">'
+    +'<button class="section-toggle" data-section-toggle="'+type+'">'
+    +'<span class="section-arrow">›</span><span class="section-title">— '+label+'</span>'
+    +'</button>'
+    +'<div class="section-entries" style="max-height:'+(isClosed?'0':'99999px')+'">'+html+'</div></div>';
+}
+function render(){
+  var el=document.getElementById('results');
+  var kr=lang==='kr';
+  var matched=ENTRIES.filter(function(e){return matchEntry(e,query);});
+  if(query&&matched.length===0){
+    el.innerHTML='<div style="padding:0 3rem 4rem"><div class="empty-state"><div class="empty-word">&ldquo;'+query+'&rdquo;</div><div class="empty-note">'+(kr?'결과 없음':'No entries found — try a related term.')+'</div></div></div>';
+    return;
+  }
+  var countText=query
+    ?(kr?'"'+query+'" — '+matched.length+'개':matched.length+' result'+(matched.length===1?'':'s')+' for "'+query+'"')
+    :(kr?'전체 — '+ENTRIES.length+'개':'All entries — '+ENTRIES.length);
+  var html='<div style="padding:0 3rem 4rem"><div class="results-count">'+countText+'</div>';
+  if(query){
+    matched.forEach(function(e,i){html+=buildEntry(e,i);});
+  } else {
+    var exp=matched.filter(function(e){return e.type==='experience';});
+    var proj=matched.filter(function(e){return e.type==='project';});
+    if(exp.length) html+=buildSection('experience',kr?'경험':'experience',exp);
+    if(proj.length) html+=buildSection('project',kr?'프로젝트':'projects',proj);
+  }
+  html+='</div>';
+  el.innerHTML=html;
+}
+document.addEventListener('click',function(e){
+  if(e.target.closest('#lang-btn')){toggleLang();return;}
+  if(e.target.id==='clear-btn'){setSearch('');return;}
+  var st=e.target.closest('[data-section-toggle]');
+  if(st){toggleSection(st.getAttribute('data-section-toggle'));return;}
+  var sa=e.target.closest('[data-search]');
+  if(sa&&!e.target.closest('[data-toggle-entry]')){e.preventDefault();setSearch(sa.getAttribute('data-search'));return;}
+  var et=e.target.closest('[data-toggle-entry]');
+  if(et&&!e.target.closest('[data-search]')){toggleEntry(et.getAttribute('data-toggle-entry'));return;}
+});
+document.getElementById('search-input').addEventListener('input',function(){setSearch(this.value.trim());});
+render();
+</script>
+</body>
+</html>
