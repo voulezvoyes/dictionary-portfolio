@@ -94,7 +94,7 @@
   .entry-main:hover{background:var(--bg-inset);margin:0 -3rem;padding-left:3rem;padding-right:3rem}
 
   .entry-left{display:flex;flex-direction:column;gap:.4rem;padding-top:.1rem}
-  .entry-skills{display:flex;flex-direction:column;gap:.25rem}
+  .entry-skills{display:flex;flex-direction:row;flex-wrap:wrap;gap:.25rem}
   .skill-pill{display:inline-block;width:fit-content}
   .entry-pos{font-size:.62rem;color:var(--muted);letter-spacing:.05em;margin-top:.1rem;line-height:1.6}
   .entry-num{font-size:.6rem;color:var(--red);letter-spacing:.1em;background:var(--red-bg);padding:.16rem .4rem;width:fit-content;margin-top:auto}
@@ -139,12 +139,12 @@
   .footer-edition{font-size:.65rem;font-weight:300;color:var(--muted);letter-spacing:.06em}
 
   @media(max-width:640px){
-    header,.hook,.search-section,#results,footer{padding-left:1.4rem;padding-right:1.4rem}
+    header,.hook,.search-section,#results,footer{padding-left:1.2rem;padding-right:1.2rem}
     .hook,.entry-main,.case-study-inner{grid-template-columns:1fr;gap:.7rem}
-    .entry-main:hover{margin:0 -1.4rem;padding-left:1.4rem;padding-right:1.4rem}
-    .case-study{margin:0 -1.4rem}
-    .case-study-inner{padding-left:1.4rem;padding-right:1.4rem}
-    h1{font-size:1.8rem}
+    .entry-main:hover{margin:0 -1.2rem;padding-left:1.2rem;padding-right:1.2rem}
+    .case-study{margin:0 -1.2rem}
+    .case-study-inner{padding-left:1.2rem;padding-right:1.2rem}
+    h1{font-size:1.6rem}.section-toggle{text-align:left}
   }
   body.lang-kr .en-only{display:none!important}
   body.lang-kr .kr-only{display:block!important}
@@ -177,7 +177,7 @@
     <div class="hook-pos en-only">n. systems thinker.<br>builder. writer.</div>
     <div class="hook-pos kr-only" style="display:none">n. 시스템 사고자.<br>빌더. 작가.</div>
     <div class="hook-contact">
-      <a class="contact-link" href="mailto:voulezvoyes@gmail.com">→ Email</a>
+      <a class="contact-link" href="/cdn-cgi/l/email-protection#f78198829b928d81988e9284b7909a969e9bd994989a">→ Email</a>
       <a class="contact-link" href="https://linkedin.com/in/voulezvoyes" target="_blank" rel="noopener">→ LinkedIn</a>
     </div>
   </div>
@@ -224,7 +224,7 @@
   <span class="footer-edition">jaesungkim.is</span>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 var ENTRIES = [
   { id:'ko-sca-brand', type:'experience', num:'01',
     title:'Ko.SCA — Brand & Strategy', title_kr:'Ko.SCA — 브랜드 & 전략',
