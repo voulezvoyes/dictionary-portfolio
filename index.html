@@ -280,7 +280,7 @@ var ENTRIES = [
     case_kr:{ action:'비공식적으로 존재하던 모든 프로세스를 파악하고 문서 시스템으로 전환 — 역할 문서, 행사 체크리스트, 인수인계 프로토콜.', result:'온보딩이 2개월에서 2주로. 조직이 인원 교체를 흡수하면서도 연속성을 유지하게 됐다.', seeAlso:['브랜드 전략','시스템'] },
     keywords:['community','design','operations','onboarding','systems','leadership','organization','ko.sca','structure'] },
 
-  { id:'cosmos', type:'project', num:'05',
+  { id:'cosmos', type:'project', num:'05', url:'https://cosmos-is.vercel.app',
     title:'cosmos', title_kr:'cosmos',
     org:'Personal — AI Tool Design', org_kr:'개인 프로젝트 — AI 도구 설계',
     pos:'n. — AI · product design', skills:['Vibe Coding','AI / LLM','Product Design'],
@@ -437,7 +437,65 @@ document.addEventListener('click',function(e){
   if(et&&!e.target.closest('[data-search]')){toggleEntry(et.getAttribute('data-toggle-entry'));return;}
 });
 document.getElementById('search-input').addEventListener('input',function(){setSearch(this.value.trim());});
+
+// ── 1. URL ANCHOR
+function applyHash() {
+  var hash = window.location.hash.replace('#','');
+  if (!hash) return;
+  render();
+  var el = document.querySelector('[data-entry-id="'+hash+'"]');
+  if (el && !openEntries[hash]) {
+    toggleEntry(hash);
+    setTimeout(function(){ el.scrollIntoView({behavior:'smooth',block:'start'}); }, 100);
+  }
+}
+var _origToggleEntry = toggleEntry;
+toggleEntry = function(id) {
+  _origToggleEntry(id);
+  history.replaceState(null,'', openEntries[id] ? '#'+id : location.pathname);
+};
+
+// ── 2. AUTO-EXPAND on search
+var _origSetSearch = setSearch;
+setSearch = function(term) {
+  _origSetSearch(term);
+  if (!term) return;
+  ENTRIES.filter(function(e){ return matchEntry(e, term); }).forEach(function(e) {
+    if (!openEntries[e.id]) {
+      openEntries[e.id] = true;
+      var el = document.querySelector('[data-entry-id="'+e.id+'"]');
+      if (el) {
+        el.classList.add('is-open');
+        var btn = el.querySelector('.expand-toggle');
+        if (btn) btn.innerHTML = '<span class="expand-arrow">›</span> '+(lang==='kr'?'접기':'Close');
+      }
+    }
+  });
+};
+
+// ── 3. KEYBOARD NAVIGATION
+function patchA11y() {
+  document.querySelectorAll('.entry-main').forEach(function(el) {
+    if (el.getAttribute('tabindex')) return;
+    el.setAttribute('tabindex','0');
+    el.setAttribute('role','button');
+  });
+}
+var _origRender = render;
+render = function() { _origRender(); patchA11y(); };
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') { setSearch(''); document.getElementById('search-input').blur(); return; }
+  if (e.key === 'Enter' && document.activeElement && document.activeElement.hasAttribute('data-toggle-entry')) {
+    var id = document.activeElement.getAttribute('data-toggle-entry');
+    if (id) toggleEntry(id);
+  }
+});
+
 render();
+patchA11y();
+applyHash();
+
 </script>
 </body>
 </html>
